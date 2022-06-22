@@ -1,0 +1,36 @@
+- name: Get node pool data
+  hosts: localhost
+  gather_facts: no
+  connection: local
+  tasks:
+    - name: Create file to store the JSON output
+      copy:
+        dest: "info.json"
+        content: |
+          {}
+
+    - name: Get info on a node pool
+      gcp_container_node_pool_info:
+        cluster: 
+          name: "{{cluster}}"
+        location: "{{location}}"
+        project: "{{project}}"
+        auth_kind: serviceaccount
+        service_account_file: "{{service_account_file}}"
+      register: result
+
+    - debug:
+        var: result
+
+    - name: Write content to the file
+      copy:
+        dest: "info.json"
+        content: |
+          {{ result }}
+
+    - name: Execute script to verify auto upgrade is enabled or disabled
+      command: python3 verify-auto-upgrade.py
+      register: result
+
+    - debug:
+       msg: " {{ result.stdout_lines }} "
