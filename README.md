@@ -72,7 +72,7 @@ terraform apply
 2. When we execute ansible playbook identify-auto-upgrade.yaml it will check if auto upgrade is enabled or disabled and will print specific message. 
 3. Run below commands to identify remediation
 ```
-ansible-playbook identify-auto-upgrade.yaml --extra-vars '{"cluster":"cloudmatos-gke", "location":"us-east1-b", "project":"cloudmatos", "service_account_file":"/home/chetank/cloudmatos/cloudmatos-0827bd9dfe5f.json"}' -vvv
+ansible-playbook identify-auto-upgrade.yaml --extra-vars '{"cluster":"cloudmatos-gke", "location":"us-east1-b", "project":"cloudmatos", "service_account_file":"/tmp/key.json"}' -vvv
 ```
 
 ## Remediation Solution:
