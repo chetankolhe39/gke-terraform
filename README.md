@@ -40,14 +40,18 @@ export GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json
 ```
 
 ## Details about variables used:
-1. Variables used in infra
+1. Variables used in gke-setup
 - project
 - region
 - zone
-2. Variables used in remediation
+- auto_repair
+- auto_upgrade
+2. Variables used in gke-remediation
 - project
 - region
 - zone
+- auto_repair
+- auto_upgrade
 3. Variables used in identify remediation
 - cluster
 - location
@@ -55,12 +59,12 @@ export GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json
 - service_account_file
 
 ## Setup GKE cluster for testing:
-1. For setup we will use main.tf and variables-setup.tfvars files from infra directory.
-2. Run below commands to setup GKE cluster
+1. For setup we will use main.tf file from gke-setup directory and gke-cluster module from modules.
+2. Go to gke-setup directory and run below commands to setup GKE cluster
 ```
 terraform init
-terraform plan -var-file=variables-setup.tfvars
-terraform apply -var-file=variables-setup.tfvars
+terraform plan
+terraform apply
 ``` 
 
 ## Identify Remediation:
@@ -76,12 +80,12 @@ ansible-playbook identify-auto-upgrade.yaml --extra-vars '{"cluster":"cloudmatos
 2. For remediation solution we will have to use terraform.tfstate file of infra setup as we will be updating existing resources with new terraform script.
 
 ## Remediation Steps:
-1. For remediation we will use main.tf and variables-remediation.tfvars files from remediation directory.
-2. Run below commands for remediation
+1. For remediation we will use main.tf file from gke-remediation directory and gke-cluster module from modules.
+2. Go to gke-remediation directory and run below commands for remediation
 ```
 terraform init
-terraform plan -var-file=variables-remediation.tfvars -state=../infra/terraform.tfstate
-terraform apply -var-file=variables-remediation.tfvars -state=../infra/terraform.tfstate
+terraform plan -state=../gke-setup/terraform.tfstate
+terraform apply -state=../gke-setup/terraform.tfstate
 ```
 
 ## Steps to destroy the GKE cluster setup:
@@ -89,4 +93,3 @@ terraform apply -var-file=variables-remediation.tfvars -state=../infra/terraform
    terraform plan -destroy
    terraform apply -destroy
 ```
-Note: When we use both above commands for destroy we will need to enter project id.
